@@ -197,13 +197,24 @@ background:#ff5722;
 background: linear-gradient(45deg, #f39c12, #d35400);
 font-size: 13px;
 padding: 8px;
-margin-bottom: 12px;
+margin-bottom: 10px;
 border-radius: 8px;
 animation: bounceBtn 2s infinite;
 }
 @keyframes bounceBtn {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-3px); }
+}
+
+/* Movie Catalog Button Styling */
+.catalog-btn {
+background: linear-gradient(45deg, #8e44ad, #3498db);
+font-size: 14px;
+padding: 10px;
+margin-bottom: 10px;
+border-radius: 8px;
+font-weight: bold;
+box-shadow: 0 4px 12px rgba(142,68,173,0.3);
 }
 
 /* Copy UPI Button */
@@ -320,7 +331,6 @@ text-align: left;
 color: #fa8c16;
 }
 
-/* Dynamic Movie Updates Ticker Style */
 .movie-update-ticker {
 background: #fffbe6;
 border: 1px solid #ffe58f;
@@ -497,12 +507,17 @@ z-index: 10;
 <!-- Spin Wheel Trigger -->
 <button class="spin-trigger-btn" onclick="playClickSound(); openSpinModal()">🎁 Spin to Win Extra Discount!</button>
 
+<!-- NEW: Movie Catalog Page Button with Proper Spacing -->
+<button class="catalog-btn" onclick="playClickSound(); window.location.href='movies.html'">
+  🎬 View All Movies & Catalog
+</button>
+
 <!-- Live Viewer Counter -->
 <div class="viewer-counter">
 👀 <span id="viewCount">42</span> people viewing this page right now
 </div>
 
-<!-- NEW: Live Movie Updates Ticker (Fetches directly from movies.json) -->
+<!-- Movie Updates Ticker -->
 <div class="movie-update-ticker" id="movieTicker">
 🎬 Checking for new movie updates...
 </div>
@@ -578,7 +593,7 @@ z-index: 10;
 
 <!-- Floating Telegram Chat Button -->
 <a href="https://t.me/botmaster55" target="_blank" class="floating-telegram" title="Chat with Owner">
-<svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.228-.461-1.901-.903-1.056-.693-1.653-1.124-2.678-1.8-1.185-.781-.417-1.21.258-1.911.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.482-.428-.008-1.252-.241-1.865-.44-752-.245-1.349-.374-1.297-.789.027-.216.324-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635.099-.002.321.023.465.141.119.098.152.228.163.331.011.103.024.337.013.519z"/></svg>
+<svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.228-.461-1.901-.903-1.056-.693-1.653-1.124-2.678-1.8-1.185-.781-.417-1.21.258-1.911.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.482-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.324-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635.099-.002.321.023.465.141.119.098.152.228.163.331.011.103.024.337.013.519z"/></svg>
 </a>
 
 <!-- Toast Notification -->
@@ -638,19 +653,13 @@ let plansData = { "1week": "1 Week", "1month": "1 Month", "2month": "2 Month", "
 let upiId = "BHARATPE.9Q0Q0K0Z8Q466572@unitype";
 let qrCodeInstance = null;
 
-// Dark/Light Theme Switcher
 function toggleTheme(){
   let body = document.body;
   body.classList.toggle("dark-mode");
   let btn = document.getElementById("themeBtn");
-  if(body.classList.contains("dark-mode")){
-    btn.innerText = "☀️";
-  } else {
-    btn.innerText = "🌙";
-  }
+  if(body.classList.contains("dark-mode")){ btn.innerText = "☀️"; } else { btn.innerText = "🌙"; }
 }
 
-// Copy UPI ID function
 function copyUpiId(){
   navigator.clipboard.writeText(upiId);
   let toast = document.getElementById("toast");
@@ -659,7 +668,6 @@ function copyUpiId(){
   setTimeout(() => { toast.style.display = "none"; }, 2500);
 }
 
-// Subtle Web Audio Click Sound Effect
 function playClickSound() {
   try {
     let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -683,38 +691,22 @@ selectedDuration = plansData[durationKey];
 document.querySelectorAll(".plan").forEach(function(plan){ plan.classList.remove("active"); });
 element.classList.add("active");
 document.getElementById("selectedPlan").innerHTML = "✅ Selected: " + selectedDuration + " — ₹" + amount;
-
-confetti({
-  particleCount: 50,
-  spread: 60,
-  origin: { y: 0.7 }
-});
+confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
 }
 
 function openPaymentModal(){
 if(selectedAmount === 0){ alert("Please select a membership plan first!"); return; }
 document.getElementById("modalAmount").innerHTML = "Amount: ₹" + selectedAmount + " (" + selectedDuration + ")";
 document.getElementById("paymentModal").style.display = "flex";
-
 let qrContainer = document.getElementById("qrcode");
 qrContainer.innerHTML = "";
 let upiString = `upi://pay?pa=${upiId}&pn=Sekh%20Sarif&am=${selectedAmount}&cu=INR`;
-qrCodeInstance = new QRCode(qrContainer, {
-  text: upiString,
-  width: 130,
-  height: 130
-});
-
-confetti({
-  particleCount: 100,
-  spread: 80,
-  origin: { y: 0.6 }
-});
+qrCodeInstance = new QRCode(qrContainer, { text: upiString, width: 130, height: 130 });
+confetti({ particleCount: 100, spread: 80, origin: { y: 0.6 } });
 }
 
 function closePaymentModal(){ document.getElementById("paymentModal").style.display = "none"; }
 
-// Download QR Code Functionality
 function downloadQRCode(){
   let qrImage = document.querySelector("#qrcode img");
   if(qrImage){
@@ -725,29 +717,19 @@ function downloadQRCode(){
     document.body.appendChild(downloadLink);
     downloadLink.click();
     document.body.removeChild(downloadLink);
-    
     let toast = document.getElementById("toast");
     toast.innerText = "✅ QR Code Downloaded!";
     toast.style.display = "block";
     setTimeout(() => { toast.style.display = "none"; }, 2500);
-  } else {
-    alert("QR Code not generated yet!");
-  }
+  } else { alert("QR Code not generated yet!"); }
 }
 
-// Spin Wheel Logic
-function openSpinModal(){
-  document.getElementById("spinModal").style.display = "flex";
-  document.getElementById("spinResult").innerText = "";
-}
-function closeSpinModal(){
-  document.getElementById("spinModal").style.display = "none";
-}
+function openSpinModal(){ document.getElementById("spinModal").style.display = "flex"; document.getElementById("spinResult").innerText = ""; }
+function closeSpinModal(){ document.getElementById("spinModal").style.display = "none"; }
 function spinWheel(){
   let wheel = document.getElementById("wheel");
   let randomDegree = Math.floor(Math.random() * 3600) + 1440;
   wheel.style.transform = `rotate(${randomDegree}deg)`;
-  
   setTimeout(() => {
     document.getElementById("spinResult").innerText = "🎉 Mubarak ho! Aapko Special Discount Mil Gaya!";
     confetti({ particleCount: 80, spread: 70, origin: { y: 0.5 } });
@@ -768,13 +750,8 @@ closePaymentModal();
 
 function toggleFaq(element){
 let answer = element.nextElementSibling;
-if(answer.style.display === "block"){
-answer.style.display = "none";
-element.querySelector("span").innerText = "▼";
-} else {
-answer.style.display = "block";
-element.querySelector("span").innerText = "▲";
-}
+if(answer.style.display === "block"){ answer.style.display = "none"; element.querySelector("span").innerText = "▼"; }
+else { answer.style.display = "block"; element.querySelector("span").innerText = "▲"; }
 }
 
 let time = 15 * 60;
@@ -787,10 +764,8 @@ setInterval(function(){
   if(time > 0) time--;
 }, 1000);
 
-// NEW: Fetch movies from movies.json and rotate them automatically
 let movieUpdates = [];
 let movieIndex = 0;
-
 async function fetchMovieUpdates() {
   try {
     let response = await fetch('movies.json');
