@@ -320,6 +320,19 @@ text-align: left;
 color: #fa8c16;
 }
 
+/* Dynamic Movie Updates Ticker Style */
+.movie-update-ticker {
+background: #fffbe6;
+border: 1px solid #ffe58f;
+color: #d46b08;
+font-size: 11px;
+font-weight: bold;
+padding: 7px 10px;
+border-radius: 8px;
+margin-bottom: 10px;
+text-align: left;
+}
+
 .viewer-counter {
 font-size: 11px;
 color: #888;
@@ -487,6 +500,11 @@ z-index: 10;
 <!-- Live Viewer Counter -->
 <div class="viewer-counter">
 👀 <span id="viewCount">42</span> people viewing this page right now
+</div>
+
+<!-- NEW: Live Movie Updates Ticker (Fetches directly from movies.json) -->
+<div class="movie-update-ticker" id="movieTicker">
+🎬 Checking for new movie updates...
 </div>
 
 <div class="buyer-ticker" id="buyerTicker">
@@ -769,6 +787,34 @@ setInterval(function(){
   if(time > 0) time--;
 }, 1000);
 
+// NEW: Fetch movies from movies.json and rotate them automatically
+let movieUpdates = [];
+let movieIndex = 0;
+
+async function fetchMovieUpdates() {
+  try {
+    let response = await fetch('movies.json');
+    let data = await response.json();
+    if(data && data.latest_updates) {
+      movieUpdates = data.latest_updates;
+      updateMovieTicker();
+    }
+  } catch(e) {
+    document.getElementById("movieTicker").innerHTML = "🎬 🔥 Latest Blockbuster Movies Added Daily!";
+  }
+}
+
+function updateMovieTicker() {
+  if(movieUpdates.length > 0) {
+    let ticker = document.getElementById("movieTicker");
+    ticker.innerHTML = `${movieUpdates[movieIndex]}`;
+    movieIndex = (movieIndex + 1) % movieUpdates.length;
+  }
+}
+
+fetchMovieUpdates();
+setInterval(updateMovieTicker, 4500);
+
 let buyers = [
   { name: "@Rahul", plan: "1 Month" },
   { name: "@Aman_Singh", plan: "3 Months VIP" },
@@ -776,11 +822,11 @@ let buyers = [
   { name: "@Vikas_Kumar", plan: "2 Months" },
   { name: "@Deepak_Sharma", plan: "1 Month" }
 ];
-let index = 0;
+let bIndex = 0;
 setInterval(function(){
-  index = (index + 1) % buyers.length;
+  bIndex = (bIndex + 1) % buyers.length;
   let ticker = document.getElementById("buyerTicker");
-  ticker.innerHTML = `🔔 <span>${buyers[index].name}</span> ne abhi ${buyers[index].plan} ka plan liya!`;
+  ticker.innerHTML = `🔔 <span>${buyers[bIndex].name}</span> ne abhi ${buyers[bIndex].plan} ka plan liya!`;
 }, 4000);
 
 setInterval(function(){
