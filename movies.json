@@ -1,8 +1,27 @@
-{
-  "latest_updates": [
-    "🔥 Border 2 (2026) Full Movie Added!",
-    "🎬 Sholay 2 Extended Director's Cut Live!",
-    "⭐ Latest Hollywood 4K Action Movie Uploaded!",
-    "🍿 New South Indian Hindi Dubbed Blockbuster Added!"
-  ]
+// Movie Ticker Fetch Code
+let movieUpdates = [];
+let movieIndex = 0;
+
+async function fetchMovieUpdates() {
+  try {
+    let response = await fetch('movies.json');
+    let data = await response.json();
+    if(data && data.latest_updates) {
+      movieUpdates = data.latest_updates;
+      updateMovieTicker();
+    }
+  } catch(e) {
+    document.getElementById("movieTicker").innerHTML = "🎬 🔥 Latest Blockbuster Movies Added Daily!";
+  }
 }
+
+function updateMovieTicker() {
+  if(movieUpdates.length > 0) {
+    let ticker = document.getElementById("movieTicker");
+    ticker.innerHTML = `${movieUpdates[movieIndex]}`;
+    movieIndex = (movieIndex + 1) % movieUpdates.length;
+  }
+}
+
+fetchMovieUpdates();
+setInterval(updateMovieTicker, 4500);
