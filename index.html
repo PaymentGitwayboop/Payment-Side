@@ -23,7 +23,7 @@ padding:20px 20px 60px 20px;
 }
 
 :root {
---box-bg: #white;
+--box-bg: #fff;
 --text-color: #333;
 --desc-bg: #fff8f5;
 }
@@ -192,6 +192,20 @@ background:#7289da;
 background:#ff5722;
 }
 
+/* Spin Wheel Trigger Button */
+.spin-trigger-btn {
+background: linear-gradient(45deg, #f39c12, #d35400);
+font-size: 13px;
+padding: 8px;
+margin-bottom: 12px;
+border-radius: 8px;
+animation: bounceBtn 2s infinite;
+}
+@keyframes bounceBtn {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
 /* Copy UPI Button */
 .copy-upi-btn {
 background: #6c757d;
@@ -287,7 +301,7 @@ height: 26px;
 fill: white;
 }
 
-/* Live Recent Buyer & Viewer Ticker */
+/* Live Tickers */
 .buyer-ticker {
 background: #e6f7ff;
 border: 1px solid #91d5ff;
@@ -316,7 +330,7 @@ font-weight: bold;
 color: #d32f2f;
 }
 
-/* Popup Toast Notification */
+/* Toast Notification */
 .toast {
 position: fixed;
 bottom: 20px;
@@ -336,6 +350,7 @@ animation: slideIn 0.3s ease;
   to { transform: translateY(0); opacity: 1; }
 }
 
+/* Modals */
 .modal {
 display: none;
 position: fixed;
@@ -397,6 +412,45 @@ margin-top: 5px;
 text-align: center;
 justify-content: center;
 }
+
+/* QR Code Section inside Modal */
+.qr-container {
+margin: 15px 0;
+background: white;
+padding: 10px;
+border-radius: 10px;
+display: inline-block;
+box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.qr-container img {
+width: 150px;
+height: 150px;
+object-fit: contain;
+}
+
+/* Spin Wheel Modal Styling */
+.wheel-container {
+position: relative;
+width: 200px;
+height: 200px;
+margin: 15px auto;
+border-radius: 50%;
+border: 5px solid #ff9900;
+background: conic-gradient(#ff416c 0deg 90deg, #ff9900 90deg 180deg, #2ecc71 180deg 270deg, #3498db 270deg 360deg);
+transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+}
+.wheel-pointer {
+position: absolute;
+top: -15px;
+left: 50%;
+transform: translateX(-50%);
+width: 0;
+height: 0;
+border-left: 10px solid transparent;
+border-right: 10px solid transparent;
+border-bottom: 20px solid #e74c3c;
+z-index: 10;
+}
 </style>
 </head>
 <body>
@@ -417,6 +471,9 @@ justify-content: center;
 
 <img src="logo.png" class="logo">
 <div class="title">🔥 PREMIUM MEMBERSHIP 🔥</div>
+
+<!-- Spin Wheel Trigger -->
+<button class="spin-trigger-btn" onclick="playClickSound(); openSpinModal()">🎁 Spin to Win Extra Discount!</button>
 
 <!-- Live Viewer Counter -->
 <div class="viewer-counter">
@@ -457,7 +514,7 @@ justify-content: center;
 
 <div class="selected" id="selectedPlan">Please select a membership plan</div>
 
-<button class="pay" onclick="playClickSound(); openPaymentModal()">💳 Pay Now</button>
+<button class="pay" onclick="playClickSound(); openPaymentModal()">💳 Pay Now & Scan QR</button>
 <button class="copy-upi-btn" onclick="playClickSound(); copyUpiId()">📋 Copy UPI ID (Manual Pay)</button>
 
 <!-- Secure Trust Badge -->
@@ -500,36 +557,58 @@ justify-content: center;
 <!-- Toast Notification -->
 <div id="toast" class="toast">✅ Copied Successfully!</div>
 
+<!-- Payment Modal with QR Code -->
 <div id="paymentModal" class="modal">
 <div class="modal-content">
-<h3>Select Payment App</h3>
-<p id="modalAmount" style="color:var(--text-color); font-weight:bold; margin-bottom:15px;"></p>
+<h3>Select Payment App / Scan QR</h3>
+<p id="modalAmount" style="color:var(--text-color); font-weight:bold; margin-bottom:10px;"></p>
+
+<!-- Dynamic QR Code Container -->
+<div class="qr-container">
+<div id="qrcode"></div>
+</div>
+<p style="font-size:11px; color:#666; margin:5px 0 10px 0;">Dusre phone se GPay/PhonePe se scan karein</p>
 
 <a href="javascript:void(0)" onclick="payVia('gpay')" class="app-btn gpay">
-<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" class="app-logo"> Google Pay
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" class="app-logo"> Google Pay Direct
 </a>
 
 <a href="javascript:void(0)" onclick="payVia('phonepe')" class="app-btn phonepe">
-<img src="https://iili.io/CLEyL4R.jpg" class="app-logo"> PhonePe
+<img src="https://iili.io/CLEyL4R.jpg" class="app-logo"> PhonePe Direct
 </a>
 
 <a href="javascript:void(0)" onclick="payVia('paytm')" class="app-btn paytm">
-<img src="https://iili.io/CLEyDvI.jpg" class="app-logo"> Paytm
-</a>
-
-<a href="javascript:void(0)" onclick="payVia('upi')" class="app-btn amazon">
-<img src="https://iili.io/CLEyiCJ.jpg" class="app-logo"> Amazon Pay / Other UPI
+<img src="https://iili.io/CLEyDvI.jpg" class="app-logo"> Paytm Direct
 </a>
 
 <button class="app-btn close-btn" onclick="closePaymentModal()">Cancel</button>
 </div>
 </div>
 
+<!-- Spin Wheel Modal -->
+<div id="spinModal" class="modal">
+<div class="modal-content">
+<h3>🎁 Lucky Spin Wheel</h3>
+<p style="font-size:12px; color:#666;">Spin karke discount jeeto!</p>
+<div style="position:relative;">
+<div class="wheel-pointer"></div>
+<div class="wheel-container" id="wheel"></div>
+</div>
+<button class="pay" style="margin-top:15px; padding:10px; font-size:15px;" onclick="spinWheel()">🎲 Spin Now!</button>
+<p id="spinResult" style="font-weight:bold; color:#d32f2f; margin-top:10px; font-size:13px;"></p>
+<button class="app-btn close-btn" onclick="closeSpinModal()">Close</button>
+</div>
+</div>
+
+<!-- Include QRCode JS Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
 <script>
 let selectedAmount = 0;
 let selectedDuration = "";
 let plansData = { "1week": "1 Week", "1month": "1 Month", "2month": "2 Month", "3month": "3 Month" };
 let upiId = "BHARATPE.9Q0Q0K0Z8Q466572@unitype";
+let qrCodeInstance = null;
 
 // Dark/Light Theme Switcher
 function toggleTheme(){
@@ -575,7 +654,7 @@ selectedAmount = amount;
 selectedDuration = plansData[durationKey];
 document.querySelectorAll(".plan").forEach(function(plan){ plan.classList.remove("active"); });
 element.classList.add("active");
-document.getElementById("selectedPlaninnerHTML" || "selectedPlan").innerHTML = "✅ Selected: " + selectedDuration + " — ₹" + amount;
+document.getElementById("selectedPlan").innerHTML = "✅ Selected: " + selectedDuration + " — ₹" + amount;
 
 confetti({
   particleCount: 50,
@@ -589,6 +668,16 @@ if(selectedAmount === 0){ alert("Please select a membership plan first!"); retur
 document.getElementById("modalAmount").innerHTML = "Amount: ₹" + selectedAmount + " (" + selectedDuration + ")";
 document.getElementById("paymentModal").style.display = "flex";
 
+// Generate QR Code dynamically based on UPI and Amount
+let qrContainer = document.getElementById("qrcode");
+qrContainer.innerHTML = "";
+let upiString = `upi://pay?pa=${upiId}&pn=Sekh%20Sarif&am=${selectedAmount}&cu=INR`;
+qrCodeInstance = new QRCode(qrContainer, {
+  text: upiString,
+  width: 140,
+  height: 140
+});
+
 confetti({
   particleCount: 100,
   spread: 80,
@@ -598,6 +687,25 @@ confetti({
 
 function closePaymentModal(){ document.getElementById("paymentModal").style.display = "none"; }
 
+// Spin Wheel Logic
+function openSpinModal(){
+  document.getElementById("spinModal").style.display = "flex";
+  document.getElementById("spinResult").innerText = "";
+}
+function closeSpinModal(){
+  document.getElementById("spinModal").style.display = "none";
+}
+function spinWheel(){
+  let wheel = document.getElementById("wheel");
+  let randomDegree = Math.floor(Math.random() * 3600) + 1440; // Multiple rotations
+  wheel.style.transform = `rotate(${randomDegree}deg)`;
+  
+  setTimeout(() => {
+    document.getElementById("spinResult").innerText = "🎉 Mubarak ho! Aapko Special Discount Mil Gaya!";
+    confetti({ particleCount: 80, spread: 70, origin: { y: 0.5 } });
+  }, 4000);
+}
+
 function payVia(appType){
 let pa = upiId;
 let pn = "Sekh%20Sarif";
@@ -605,8 +713,7 @@ let am = selectedAmount;
 let finalUrl = "";
 if(appType === 'gpay'){ finalUrl = "tez://upi/pay?pa=" + pa + "&pn=" + pn + "&am=" + am + "&cu=INR"; }
 else if(appType === 'phonepe'){ finalUrl = "phonepe://pay?pa=" + pa + "&pn=" + pn + "&am=" + am + "&cu=INR"; }
-else if(appType === 'paytm'){ finalUrl = "paytmmp://pay?pa=" + pa + "&pn=" + pn + "&am=" + am + "&cu=INR"; }
-else { finalUrl = "upi://pay?pa=" + pa + "&pn=" + pn + "&am=" + am + "&cu=INR"; }
+else { finalUrl = "paytmmp://pay?pa=" + pa + "&pn=" + pn + "&am=" + am + "&cu=INR"; }
 window.location.href = finalUrl;
 closePaymentModal();
 }
