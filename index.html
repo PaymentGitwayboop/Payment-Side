@@ -15,7 +15,7 @@ min-height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-padding:20px;
+padding:20px 20px 60px 20px;
 }
 .box{
 background:white;
@@ -24,6 +24,7 @@ padding:25px 20px;
 border-radius:20px;
 box-shadow:0 5px 25px rgba(0,0,0,0.15);
 text-align:center;
+position: relative;
 }
 .logo{
 width:110px;
@@ -175,6 +176,54 @@ display: none;
 line-height: 1.5;
 }
 
+/* Floating Telegram Chat Button */
+.floating-telegram {
+position: fixed;
+bottom: 20px;
+right: 20px;
+background: #0088cc;
+color: white;
+width: 55px;
+height: 55px;
+border-radius: 50%;
+display: flex;
+justify-content: center;
+align-items: center;
+box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+z-index: 9999;
+cursor: pointer;
+transition: transform 0.2s;
+text-decoration: none;
+}
+.floating-telegram:hover {
+transform: scale(1.1);
+}
+.floating-telegram svg {
+width: 30px;
+height: 30px;
+fill: white;
+}
+
+/* Live Recent Buyer Notification Bar */
+.buyer-ticker {
+background: #e6f7ff;
+border: 1px solid #91d5ff;
+color: #0050b3;
+font-size: 12px;
+font-weight: bold;
+padding: 8px 12px;
+border-radius: 8px;
+margin-bottom: 15px;
+display: flex;
+align-items: center;
+gap: 8px;
+animation: fadeInOut 0.5s ease-in-out;
+text-align: left;
+}
+.buyer-ticker span {
+color: #fa8c16;
+}
+
 .modal {
 display: none;
 position: fixed;
@@ -244,6 +293,10 @@ justify-content: center;
 <img src="logo.png" class="logo">
 <div class="title">🔥 PREMIUM MEMBERSHIP 🔥</div>
 
+<div class="buyer-ticker" id="buyerTicker">
+🔔 <span>@Rahul</span> ne abhi 1 Month ka plan liya!
+</div>
+
 <div class="description">
 <b>🔥SPY 𝗠𝗢𝗩𝗜𝗘 𝗗𝗔𝗧𝗔𝗕𝗔𝗦𝗘 🔥</b><br><br>
 🎬 Yahan aapko har tarah ki movies mil jayengi — Latest, Old, Bollywood, Hollywood & Regional.<br><br>
@@ -256,19 +309,19 @@ justify-content: center;
 <div class="plans">
 <div class="plan" onclick="selectPlan(15,'1week',this)">
 <div class="duration">1 Week</div>
-<div class="price">₹15</div>
+<div class="price">₹10</div>
 </div>
 <div class="plan" onclick="selectPlan(45,'1month',this)">
 <div class="duration">1 Month</div>
-<div class="price">₹45</div>
+<div class="price">₹40</div>
 </div>
 <div class="plan" onclick="selectPlan(85,'2month',this)">
 <div class="duration">2 Month</div>
-<div class="price">₹85</div>
+<div class="price">₹80</div>
 </div>
 <div class="plan" onclick="selectPlan(130,'3month',this)">
 <div class="duration">3 Month</div>
-<div class="price">₹130</div>
+<div class="price">₹120</div>
 </div>
 </div>
 
@@ -302,6 +355,10 @@ justify-content: center;
 </div>
 
 </div>
+
+<a href="https://t.me/botmaster55" target="_blank" class="floating-telegram" title="Chat with Owner">
+<svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.228-.461-1.901-.903-1.056-.693-1.653-1.124-2.678-1.8-1.185-.781-.417-1.21.258-1.911.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.482-.428-.008-1.252-.241-1.865-.44-752-.245-1.349-.374-1.297-.789.027-.216.324-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635.099-.002.321.023.465.141.119.098.152.228.163.331.011.103.024.337.013.519z"/></svg>
+</a>
 
 <div id="paymentModal" class="modal">
 <div class="modal-content">
@@ -373,9 +430,24 @@ element.querySelector("span").innerText = "▲";
 }
 }
 
+// Live Buyer Ticker Rotation Logic
+let buyers = [
+  { name: "@Rahul", plan: "1 Month" },
+  { name: "@Aman_Singh", plan: "3 Months VIP" },
+  { name: "@Priya99", plan: "1 Week" },
+  { name: "@Vikas_Kumar", plan: "2 Months" },
+  { name: "@Deepak_Sharma", plan: "1 Month" }
+];
+let index = 0;
+setInterval(function(){
+  index = (index + 1) % buyers.length;
+  let ticker = document.getElementById("buyerTicker");
+  ticker.innerHTML = `🔔 <span>${buyers[index].name}</span> ne abhi ${buyers[index].plan} ka plan liya!`;
+}, 4000);
+
 function winnerScreenshot(){ window.open("https://t.me/botmaster55", "_blank"); }
-function openMainChannel(){ window.open("https://t.me/YOUR_MAIN_CHANNEL", "_blank"); }
-function openMovieRequest(){ window.open("https://t.me/YOUR_REQUEST_CHANNEL", "_blank"); }
+function openMainChannel(){ window.open("https://t.me/MovieSearchAutoGroup", "_blank"); }
+function openMovieRequest(){ window.open("https://t.me/Movie_Requst_YT", "_blank"); }
 </script>
 
 </body>
