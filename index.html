@@ -367,7 +367,7 @@ justify-content: center;
 <div class="duration">1 Month</div>
 <div class="price">₹40</div>
 </div>
-<div class="plan" onclick="selectPlan(85,'2month',this)">
+<div class="plan" onclick="playClickSound(); selectPlan(85,'2month',this)">
 <div class="duration">2 Month</div>
 <div class="price">₹80</div>
 </div>
@@ -534,7 +534,7 @@ setInterval(function(){
   ticker.innerHTML = `🔔 <span>${buyers[index].name}</span> ne abhi ${buyers[index].plan} ka plan liya!`;
 }, 4000);
 
-// Live Viewer Counter fluctuation
+// Live Viewer Counter fluctuation (Ye raha wo feature jo add ho gaya hai)
 setInterval(function(){
   let viewers = Math.floor(Math.random() * (58 - 35 + 1)) + 35;
   document.getElementById("viewCount").innerText = viewers;
