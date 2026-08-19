@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Premium Membership</title>
 
+<!-- Confetti Library for Celebration Effect -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
 <style>
 *{ box-sizing:border-box; }
 body{
@@ -26,6 +29,24 @@ box-shadow:0 5px 25px rgba(0,0,0,0.15);
 text-align:center;
 position: relative;
 }
+
+/* Flash Sale Glowing Banner */
+.flash-banner {
+background: linear-gradient(90deg, #ff416c, #ff4b2b);
+color: white;
+font-size: 11px;
+font-weight: bold;
+padding: 7px 10px;
+border-radius: 8px;
+margin-bottom: 15px;
+text-align: center;
+animation: glowPulse 1.5s infinite alternate;
+}
+@keyframes glowPulse {
+  0% { opacity: 0.8; box-shadow: 0 0 5px rgba(255,65,108,0.5); }
+  100% { opacity: 1; box-shadow: 0 0 15px rgba(255,75,43,0.9); }
+}
+
 .logo{
 width:110px;
 height:110px;
@@ -130,6 +151,18 @@ background:#7289da;
 background:#ff5722;
 }
 
+/* Secure Trust Badge */
+.secure-badge {
+font-size: 11px;
+color: #2e7d32;
+background: #e8f5e9;
+border: 1px solid #c8e6c9;
+padding: 6px;
+border-radius: 6px;
+margin-top: 8px;
+font-weight: bold;
+}
+
 .screenshot-instruction {
 font-size: 14px;
 font-weight: bold;
@@ -204,7 +237,7 @@ height: 30px;
 fill: white;
 }
 
-/* Live Recent Buyer Notification Bar */
+/* Live Recent Buyer & Viewer Ticker */
 .buyer-ticker {
 background: #e6f7ff;
 border: 1px solid #91d5ff;
@@ -213,15 +246,24 @@ font-size: 12px;
 font-weight: bold;
 padding: 8px 12px;
 border-radius: 8px;
-margin-bottom: 15px;
+margin-bottom: 12px;
 display: flex;
 align-items: center;
 gap: 8px;
-animation: fadeInOut 0.5s ease-in-out;
 text-align: left;
 }
 .buyer-ticker span {
 color: #fa8c16;
+}
+
+.viewer-counter {
+font-size: 11px;
+color: #666;
+margin-bottom: 12px;
+font-weight: bold;
+}
+.viewer-counter span {
+color: #d32f2f;
 }
 
 .modal {
@@ -290,8 +332,18 @@ justify-content: center;
 <body>
 
 <div class="box">
+<!-- Glowing Flash Sale Banner -->
+<div class="flash-banner">
+⚡ Flash Sale: Get Instant VIP Access at Lowest Prices Today!
+</div>
+
 <img src="logo.png" class="logo">
 <div class="title">🔥 PREMIUM MEMBERSHIP 🔥</div>
+
+<!-- Live Viewer Counter -->
+<div class="viewer-counter">
+👀 <span id="viewCount">42</span> people viewing this page right now
+</div>
 
 <div class="buyer-ticker" id="buyerTicker">
 🔔 <span>@Rahul</span> ne abhi 1 Month ka plan liya!
@@ -307,11 +359,11 @@ justify-content: center;
 <div class="name">Sekh Sarif</div>
 
 <div class="plans">
-<div class="plan" onclick="selectPlan(15,'1week',this)">
+<div class="plan" onclick="playClickSound(); selectPlan(15,'1week',this)">
 <div class="duration">1 Week</div>
 <div class="price">₹10</div>
 </div>
-<div class="plan" onclick="selectPlan(45,'1month',this)">
+<div class="plan" onclick="playClickSound(); selectPlan(45,'1month',this)">
 <div class="duration">1 Month</div>
 <div class="price">₹40</div>
 </div>
@@ -319,7 +371,7 @@ justify-content: center;
 <div class="duration">2 Month</div>
 <div class="price">₹80</div>
 </div>
-<div class="plan" onclick="selectPlan(130,'3month',this)">
+<div class="plan" onclick="playClickSound(); selectPlan(130,'3month',this)">
 <div class="duration">3 Month</div>
 <div class="price">₹120</div>
 </div>
@@ -327,13 +379,18 @@ justify-content: center;
 
 <div class="selected" id="selectedPlan">Please select a membership plan</div>
 
-<button class="pay" onclick="openPaymentModal()">💳 Pay Now</button>
+<button class="pay" onclick="playClickSound(); openPaymentModal()">💳 Pay Now</button>
+
+<!-- Secure Trust Badge -->
+<div class="secure-badge">
+🔒 100% Secure & Fast Activation via UPI
+</div>
 
 <div class="screenshot-instruction">📸 Payment ka screenshot Owner ko bhejo</div>
 
-<button class="telegram" onclick="winnerScreenshot()">👤 Owner Screenshot</button>
-<button class="channel-btn" onclick="openMainChannel()">📢 Main Channel</button>
-<button class="request-btn" onclick="openMovieRequest()">🎬 Movie Request Group</button>
+<button class="telegram" onclick="playClickSound(); winnerScreenshot()">👤 Owner Screenshot</button>
+<button class="channel-btn" onclick="playClickSound(); openMainChannel()">📢 Main Channel</button>
+<button class="request-btn" onclick="playClickSound(); openMovieRequest()">🎬 Movie Request Group</button>
 
 <div class="faq-section">
 <div class="faq-title">❓ Frequently Asked Questions</div>
@@ -390,18 +447,50 @@ let selectedAmount = 0;
 let selectedDuration = "";
 let plansData = { "1week": "1 Week", "1month": "1 Month", "2month": "2 Month", "3month": "3 Month" };
 
+// Subtle Web Audio Click Sound Effect
+function playClickSound() {
+  try {
+    let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    let osc = audioCtx.createOscillator();
+    let gain = audioCtx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.05);
+    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.05);
+  } catch(e) {}
+}
+
 function selectPlan(amount, durationKey, element){
 selectedAmount = amount;
 selectedDuration = plansData[durationKey];
 document.querySelectorAll(".plan").forEach(function(plan){ plan.classList.remove("active"); });
 element.classList.add("active");
 document.getElementById("selectedPlan").innerHTML = "✅ Selected: " + selectedDuration + " — ₹" + amount;
+
+// Trigger Confetti Celebration on plan choice
+confetti({
+  particleCount: 50,
+  spread: 60,
+  origin: { y: 0.7 }
+});
 }
 
 function openPaymentModal(){
 if(selectedAmount === 0){ alert("Please select a membership plan first!"); return; }
 document.getElementById("modalAmount").innerHTML = "Amount: ₹" + selectedAmount + " (" + selectedDuration + ")";
 document.getElementById("paymentModal").style.display = "flex";
+
+// Big Confetti Burst on Pay Now click
+confetti({
+  particleCount: 100,
+  spread: 80,
+  origin: { y: 0.6 }
+});
 }
 
 function closePaymentModal(){ document.getElementById("paymentModal").style.display = "none"; }
@@ -444,6 +533,12 @@ setInterval(function(){
   let ticker = document.getElementById("buyerTicker");
   ticker.innerHTML = `🔔 <span>${buyers[index].name}</span> ne abhi ${buyers[index].plan} ka plan liya!`;
 }, 4000);
+
+// Live Viewer Counter fluctuation
+setInterval(function(){
+  let viewers = Math.floor(Math.random() * (58 - 35 + 1)) + 35;
+  document.getElementById("viewCount").innerText = viewers;
+}, 5000);
 
 function winnerScreenshot(){ window.open("https://t.me/botmaster55", "_blank"); }
 function openMainChannel(){ window.open("https://t.me/MovieSearchAutoGroup", "_blank"); }
