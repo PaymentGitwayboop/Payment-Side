@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Premium Membership</title>
+
+<style>
+*{ box-sizing:border-box; }
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#f2f2f2;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+}
+.box{
+background:white;
+width:360px;
+padding:25px 20px;
+border-radius:20px;
+box-shadow:0 5px 25px rgba(0,0,0,0.15);
+text-align:center;
+}
+.logo{
+width:110px;
+height:110px;
+border-radius:50%;
+object-fit:cover;
+margin-bottom:10px;
+}
+.title{
+font-size:24px;
+font-weight:900;
+margin:5px 0 12px;
+background:linear-gradient(90deg,#ff4500,#ff9900);
+-webkit-background-clip:text;
+color:transparent;
+}
+.description{
+font-size:14px;
+line-height:1.6;
+color:#555;
+margin-bottom:20px;
+}
+.payto{
+font-size:16px;
+color:#555;
+font-weight:bold;
+margin-top:5px;
+}
+.name{
+font-size:27px;
+font-weight:800;
+color:#5a00ff;
+margin:5px 0 20px;
+}
+.plans{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-bottom:18px;
+}
+.plan{
+border:2px solid #ddd;
+border-radius:14px;
+padding:13px 8px;
+background:#fff;
+cursor:pointer;
+transition:0.2s;
+}
+.plan:hover{
+border-color:#6a00ff;
+}
+.plan.active{
+border-color:#6a00ff;
+background:#f2edff;
+box-shadow:0 0 10px rgba(106,0,255,0.20);
+}
+.plan .duration{
+font-size:16px;
+font-weight:bold;
+color:#333;
+}
+.plan .price{
+font-size:23px;
+font-weight:900;
+color:#5a00ff;
+margin-top:5px;
+}
+.selected{
+font-size:14px;
+font-weight:bold;
+color:#555;
+margin:10px 0;
+}
+button{
+width:100%;
+padding:16px;
+font-size:19px;
+font-weight:bold;
+border:none;
+border-radius:12px;
+margin-top:10px;
+color:white;
+cursor:pointer;
+}
+.pay{
+background:#00a651;
+}
+.pay:active{
+transform:scale(0.98);
+}
+.telegram{
+background:#0088cc;
+}
+.channel-btn{
+background:#7289da;
+}
+.request-btn{
+background:#ff5722;
+}
+
+.screenshot-instruction {
+font-size: 14px;
+font-weight: bold;
+color: #d32f2f;
+margin: 15px 0 5px 0;
+}
+
+.modal {
+display: none;
+position: fixed;
+z-index: 1000;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0,0,0,0.5);
+justify-content: center;
+align-items: center;
+}
+.modal-content {
+background: white;
+width: 320px;
+padding: 20px;
+border-radius: 16px;
+text-align: center;
+box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+.modal-content h3 {
+margin-top: 0;
+color: #333;
+font-size: 20px;
+}
+.app-btn {
+display: flex;
+align-items: center;
+justify-content: flex-start;
+gap: 15px;
+width: 100%;
+padding: 12px 15px;
+margin: 10px 0;
+font-size: 15px;
+font-weight: bold;
+border: none;
+border-radius: 10px;
+cursor: pointer;
+color: white;
+text-align: left;
+text-decoration: none;
+}
+.app-logo {
+width: 24px;
+height: 24px;
+border-radius: 50%;
+object-fit: contain;
+background: white;
+padding: 2px;
+}
+.gpay { background: #4285F4; }
+.phonepe { background: #5f259f; }
+.paytm { background: #00b9f1; }
+.amazon { background: #ff9900; color: #111; }
+.close-btn {
+background: #ccc;
+color: #333;
+margin-top: 5px;
+text-align: center;
+justify-content: center;
+}
+</style>
+</head>
+<body>
+
+<div class="box">
+<img src="logo.png" class="logo">
+<div class="title">🔥 PREMIUM MEMBERSHIP 🔥</div>
+<div class="description">
+🎬 Get instant access to our exclusive content and private group.<br><br>
+✨ Select your plan below and complete payment.
+</div>
+
+<div class="payto">Payment To:</div>
+<div class="name">Sekh Sarif</div>
+
+<div class="plans">
+<div class="plan" onclick="selectPlan(15,'1week',this)">
+<div class="duration">1 Week</div>
+<div class="price">₹15</div>
+</div>
+<div class="plan" onclick="selectPlan(45,'1month',this)">
+<div class="duration">1 Month</div>
+<div class="price">₹45</div>
+</div>
+<div class="plan" onclick="selectPlan(85,'2month',this)">
+<div class="duration">2 Month</div>
+<div class="price">₹85</div>
+</div>
+<div class="plan" onclick="selectPlan(130,'3month',this)">
+<div class="duration">3 Month</div>
+<div class="price">₹130</div>
+</div>
+</div>
+
+<div class="selected" id="selectedPlan">Please select a membership plan</div>
+
+<button class="pay" onclick="openPaymentModal()">💳 Pay Now</button>
+
+<div class="screenshot-instruction">📸 Payment ka screenshot Owner ko bhejo</div>
+
+<button class="telegram" onclick="winnerScreenshot()">👤 Owner Screenshot</button>
+<button class="channel-btn" onclick="openMainChannel()">📢 Main Channel</button>
+<button class="request-btn" onclick="openMovieRequest()">🎬 Movie Request Group</button>
+</div>
+
+<div id="paymentModal" class="modal">
+<div class="modal-content">
+<h3>Select Payment App</h3>
+<p id="modalAmount" style="color:#666; font-weight:bold; margin-bottom:15px;"></p>
+
+<a href="javascript:void(0)" onclick="payVia('gpay')" class="app-btn gpay">
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" class="app-logo"> Google Pay
+</a>
+
+<a href="javascript:void(0)" onclick="payVia('phonepe')" class="app-btn phonepe">
+<img src="https://iili.io/CLEyL4R.jpg" class="app-logo"> PhonePe
+</a>
+
+<a href="javascript:void(0)" onclick="payVia('paytm')" class="app-btn paytm">
+<img src="https://iili.io/CLEyDvI.jpg" class="app-logo"> Paytm
+</a>
+
+<a href="javascript:void(0)" onclick="payVia('upi')" class="app-btn amazon">
+<img src="https://iili.io/CLEyiCJ.jpg" class="app-logo"> Amazon Pay / Other UPI
+</a>
+
+<button class="app-btn close-btn" onclick="closePaymentModal()">Cancel</button>
+</div>
+</div>
+
+<script>
+let selectedAmount = 0;
+let selectedDuration = "";
+let plansData = { "1week": "1 Week", "1month": "1 Month", "2month": "2 Month", "3month": "3 Month" };
+
+function selectPlan(amount, durationKey, element){
+selectedAmount = amount;
+selectedDuration = plansData[durationKey];
+document.querySelectorAll(".plan").forEach(function(plan){ plan.classList.remove("active"); });
+element.classList.add("active");
+document.getElementById("selectedPlan").innerHTML = "✅ Selected: " + selectedDuration + " — ₹" + amount;
+}
+
+function openPaymentModal(){
+if(selectedAmount === 0){ alert("Please select a membership plan first!"); return; }
+document.getElementById("modalAmount").innerHTML = "Amount: ₹" + selectedAmount + " (" + selectedDuration + ")";
+document.getElementById("paymentModal").style.display = "flex";
+}
+
+function closePaymentModal(){ document.getElementById("paymentModal").style.display = "none"; }
+
+function payVia(appType){
+let pa = "BHARATPE.9Q0Q0K0Z8Q466572@unitype";
+let pn = "Sekh%20Sarif";
+let am = selectedAmount;
+let finalUrl = "";
+if(appType === 'gpay'){ finalUrl = "tez://upi/pay?pa=" + pa + "&pn=" + pn + "&am=" + am + "&cu=INR"; }
+else if(appType === 'phonepe'){ finalUrl = "phonepe://pay?pa=" + pa + "&pn=" + pn + "&am=" + am + "&cu=INR"; }
+else if(appType === 'paytm'){ finalUrl = "paytmmp://pay?pa=" + pa + "&pn=" + pn + "&am=" + am + "&cu=INR"; }
+else { finalUrl = "upi://pay?pa=" + pa + "&pn=" + pn + "&am=" + am + "&cu=INR"; }
+window.location.href = finalUrl;
+closePaymentModal();
+}
+
+function winnerScreenshot(){ window.open("https://t.me/botmaster55", "_blank"); }
+function openMainChannel(){ window.open("https://t.me/MovieSearchAutoGroup", "_blank"); }
+function openMovieRequest(){ window.open("https://t.me/Movie_Requst_YT", "_blank"); }
+</script>
+
+</body>
+</html>
