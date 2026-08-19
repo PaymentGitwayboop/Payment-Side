@@ -452,13 +452,6 @@ object-fit: contain;
 display: block;
 margin: 0 auto;
 }
-.download-qr-btn {
-background: #34495e;
-font-size: 12px;
-padding: 8px;
-margin-top: 5px;
-margin-bottom: 10px;
-}
 
 /* Spin Wheel Modal Styling */
 .wheel-container {
@@ -507,7 +500,7 @@ z-index: 10;
 <!-- Spin Wheel Trigger -->
 <button class="spin-trigger-btn" onclick="playClickSound(); openSpinModal()">🎁 Spin to Win Extra Discount!</button>
 
-<!-- NEW: Movie Catalog Page Button with Proper Spacing -->
+<!-- Movie Catalog Button -->
 <button class="catalog-btn" onclick="playClickSound(); window.location.href='movies.html'">
   🎬 View All Movies & Catalog
 </button>
@@ -599,17 +592,14 @@ z-index: 10;
 <!-- Toast Notification -->
 <div id="toast" class="toast">✅ Copied Successfully!</div>
 
-<!-- Payment Modal with QR Code & Download -->
+<!-- Payment Modal with QR Code (Download button removed) -->
 <div id="paymentModal" class="modal">
 <div class="modal-content">
-<h3>Select Payment App / Scan QR</h3>
+<h3>Scan QR or Pay via App</h3>
 <p id="modalAmount" style="color:var(--text-color); font-weight:bold; margin-bottom:8px;"></p>
 
 <div class="qr-container">
 <div id="qrcode"></div>
-</div>
-<div>
-<button class="app-btn download-qr-btn" onclick="downloadQRCode()">📥 Download QR Code</button>
 </div>
 
 <a href="javascript:void(0)" onclick="payVia('gpay')" class="app-btn gpay">
@@ -706,23 +696,6 @@ confetti({ particleCount: 100, spread: 80, origin: { y: 0.6 } });
 }
 
 function closePaymentModal(){ document.getElementById("paymentModal").style.display = "none"; }
-
-function downloadQRCode(){
-  let qrImage = document.querySelector("#qrcode img");
-  if(qrImage){
-    let imageUrl = qrImage.src;
-    let downloadLink = document.createElement("a");
-    downloadLink.href = imageUrl;
-    downloadLink.download = "UPI-QR-Code.png";
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
-    let toast = document.getElementById("toast");
-    toast.innerText = "✅ QR Code Downloaded!";
-    toast.style.display = "block";
-    setTimeout(() => { toast.style.display = "none"; }, 2500);
-  } else { alert("QR Code not generated yet!"); }
-}
 
 function openSpinModal(){ document.getElementById("spinModal").style.display = "flex"; document.getElementById("spinResult").innerText = ""; }
 function closeSpinModal(){ document.getElementById("spinModal").style.display = "none"; }
