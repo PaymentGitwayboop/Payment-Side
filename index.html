@@ -502,7 +502,7 @@ z-index: 10;
 
 <!-- Movie Catalog Button -->
 <button class="catalog-btn" onclick="playClickSound(); window.location.href='movies.html'">
-  🎬 View All Movies & Catalog
+  🎬 View All Desy & Catalog
 </button>
 
 <!-- Live Viewer Counter -->
@@ -510,7 +510,7 @@ z-index: 10;
 👀 <span id="viewCount">42</span> people viewing this page right now
 </div>
 
-<!-- Movie Updates Ticker -->
+<!-- PoM PoM Updates Ticker -->
 <div class="movie-update-ticker" id="movieTicker">
 🎬 Checking for new PoM PoM updates...
 </div>
@@ -747,15 +747,15 @@ async function fetchMovieUpdates() {
       updateMovieTicker();
     }
   } catch(e) {
-    document.getElementById("movieTicker").innerHTML = "🎬 🔥 Latest PoM Pom  Added Daily!";
+    document.getElementById("Ticker").innerHTML = "🎬 🔥 Latest PoM Pom  Added Daily!";
   }
 }
 
 function updateMovieTicker() {
   if(movieUpdates.length > 0) {
     let ticker = document.getElementById("movieTicker");
-    ticker.innerHTML = `${movieUpdates[movieIndex]}`;
-    movieIndex = (movieIndex + 1) % movieUpdates.length;
+    ticker.innerHTML = `${Updates[Index]}`;
+    movieIndex = (movieIndex + 1) % Updates.length;
   }
 }
 
